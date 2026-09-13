@@ -5,3 +5,5 @@ dist/
 *.log
 analysis/data/*.json
 !analysis/data/.gitkeep
+
+__pycache__/
