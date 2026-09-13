@@ -1,0 +1,26 @@
+{
+  "name": "ivy-homes-assignment",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Ivy Homes internship assignment - property frontend over a partly-mis-documented API",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "node --watch server/src/index.js",
+    "dev:web": "npm --prefix web run dev",
+    "build": "npm --prefix web install && npm --prefix web run build",
+    "start": "node server/src/index.js",
+    "postinstall": "npm --prefix web install"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "type": "module"
+}
