@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ivy-homes-mumbai
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: IVY_API_KEY
+        sync: false
+      - key: IVY_SERVICE_PASSWORD
+        sync: false
+      - key: NODE_VERSION
+        value: "20"
