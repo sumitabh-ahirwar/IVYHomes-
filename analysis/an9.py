@@ -1,0 +1,20 @@
+import json, collections
+L = json.load(open("data/listings.json"))
+SQM=10.7639
+print("-- posted_by_contact frequency --")
+c = collections.Counter(x["posted_by_contact"] for x in L)
+print("unique contacts:", len(c), " top:", c.most_common(12))
+print("dist of counts:", collections.Counter(c.values()))
+print("\n-- posted_by_name frequency --")
+n = collections.Counter(x["posted_by_name"] for x in L)
+print("unique names:", len(n), "top:", n.most_common(8))
+print("\n-- apartment_name --")
+an = collections.Counter(x["apartment_name"] for x in L)
+print("unique apt names:", len(an), "top:", an.most_common(8))
+print("case: lowercase names:", sum(1 for k in an if k==k.lower()), "of", len(an))
+print("\n-- exact duplicate content keys (ignoring listing_id/url/website) --")
+def key(x):
+    return (x["apartment_name"].lower().strip(), x["locality"], x["bedroom"], x["carpet_area"], x["price"], x["floor"])
+k = collections.Counter(key(x) for x in L)
+print("dup-key groups >1:", sum(1 for v in k.values() if v>1), "extra records:", sum(v-1 for v in k.values() if v>1))
+print(collections.Counter(v for v in k.values()))
