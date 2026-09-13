@@ -1,13 +1,15 @@
 import {
-  Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer,
+  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer,
   Tooltip, XAxis, YAxis,
 } from "recharts";
 import useApiData from "../components/useApiData.js";
 import { inr, inrExact, perSqft, titleCase } from "../lib/format.js";
 
-const AXIS = { fontSize: 11, fill: "#6b6963" };
-const GREEN = "#16624a";
-const CLAY = "#a3341f";
+const AXIS = { fontSize: 11, fill: "#64748b" };
+const GRID = "rgba(126,158,214,0.1)";
+const CYAN = "#22d3ee";
+const INDIGO = "#818cf8";
+const ROSE = "#fb7185";
 
 function Stat({ label, value, note }) {
   return (
@@ -66,11 +68,17 @@ export default function Insights() {
           <p className="panel-sub">Median rupees per square foot of carpet area.</p>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={localityChart} margin={{ top: 4, right: 8, bottom: 4, left: 8 }}>
-              <CartesianGrid strokeDasharray="2 4" stroke="#e4e3de" vertical={false} />
+              <defs>
+                <linearGradient id="gCyan" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CYAN} stopOpacity={0.95} />
+                  <stop offset="100%" stopColor={INDIGO} stopOpacity={0.5} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="2 5" stroke={GRID} vertical={false} />
               <XAxis dataKey="name" tick={AXIS} interval={0} angle={-35} textAnchor="end" height={62} />
               <YAxis tick={AXIS} tickFormatter={(v) => `${Math.round(v / 1000)}k`} width={42} />
-              <Tooltip formatter={(v) => perSqft(v)} cursor={{ fill: "#f2f4f3" }} />
-              <Bar dataKey="ppsf" fill={GREEN} radius={[3, 3, 0, 0]} />
+              <Tooltip formatter={(v) => perSqft(v)} cursor={{ fill: "rgba(126,158,214,0.07)" }} />
+              <Bar dataKey="ppsf" fill="url(#gCyan)" radius={[5, 5, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -80,11 +88,17 @@ export default function Insights() {
           <p className="panel-sub">Live, genuine listings only.</p>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={bhkChart} margin={{ top: 4, right: 8, bottom: 4, left: 8 }}>
-              <CartesianGrid strokeDasharray="2 4" stroke="#e4e3de" vertical={false} />
+              <defs>
+                <linearGradient id="gCyan" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CYAN} stopOpacity={0.95} />
+                  <stop offset="100%" stopColor={INDIGO} stopOpacity={0.5} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="2 5" stroke={GRID} vertical={false} />
               <XAxis dataKey="name" tick={AXIS} />
               <YAxis tick={AXIS} tickFormatter={(v) => `${(v / 1e7).toFixed(1)}Cr`} width={46} />
-              <Tooltip formatter={(v, n) => (n === "price" ? inr(v) : v)} cursor={{ fill: "#f2f4f3" }} />
-              <Bar dataKey="price" fill={GREEN} radius={[3, 3, 0, 0]} />
+              <Tooltip formatter={(v, n) => (n === "price" ? inr(v) : v)} cursor={{ fill: "rgba(126,158,214,0.07)" }} />
+              <Bar dataKey="price" fill="url(#gCyan)" radius={[5, 5, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </section>
@@ -97,14 +111,20 @@ export default function Insights() {
           <strong>{activity.listings_last_7_days}</strong> listings were posted in the seven days
           before the reference moment.
         </p>
-        <ResponsiveContainer width="100%" height={190}>
-          <LineChart data={activity.timeline} margin={{ top: 4, right: 10, bottom: 4, left: 4 }}>
-            <CartesianGrid strokeDasharray="2 4" stroke="#e4e3de" vertical={false} />
+        <ResponsiveContainer width="100%" height={200}>
+          <AreaChart data={activity.timeline} margin={{ top: 4, right: 10, bottom: 4, left: 4 }}>
+            <defs>
+              <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={CYAN} stopOpacity={0.45} />
+                <stop offset="100%" stopColor={CYAN} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="2 5" stroke={GRID} vertical={false} />
             <XAxis dataKey="date" tick={AXIS} minTickGap={48} />
             <YAxis tick={AXIS} width={32} />
-            <Tooltip />
-            <Line type="monotone" dataKey="count" stroke={GREEN} strokeWidth={2} dot={false} />
-          </LineChart>
+            <Tooltip cursor={{ stroke: CYAN, strokeOpacity: 0.35 }} />
+            <Area type="monotone" dataKey="count" stroke={CYAN} strokeWidth={2} fill="url(#gArea)" />
+          </AreaChart>
         </ResponsiveContainer>
       </section>
 
@@ -131,12 +151,18 @@ export default function Insights() {
             <h3 style={{ fontSize: 14, margin: "0 0 8px" }}>Why records are impossible</h3>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={corruption} layout="vertical" margin={{ left: 4, right: 20 }}>
-                <CartesianGrid strokeDasharray="2 4" stroke="#e4e3de" horizontal={false} />
+                <defs>
+                  <linearGradient id="gRose" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor={ROSE} stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#c084fc" stopOpacity={0.7} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="2 5" stroke={GRID} horizontal={false} />
                 <XAxis type="number" tick={AXIS} />
-                <YAxis type="category" dataKey="reason" tick={{ fontSize: 10, fill: "#6b6963" }} width={168} />
-                <Tooltip cursor={{ fill: "#f2f4f3" }} />
-                <Bar dataKey="count" radius={[0, 3, 3, 0]}>
-                  {corruption.map((_, i) => <Cell key={i} fill={CLAY} />)}
+                <YAxis type="category" dataKey="reason" tick={{ fontSize: 10, fill: "#64748b" }} width={168} />
+                <Tooltip cursor={{ fill: "rgba(126,158,214,0.07)" }} />
+                <Bar dataKey="count" radius={[0, 5, 5, 0]}>
+                  {corruption.map((_, i) => <Cell key={i} fill="url(#gRose)" />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
